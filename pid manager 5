@@ -1,0 +1,159 @@
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+#define MAX 1000
+#define MIN 100
+int y,c[900];
+struct p
+{
+	int pid,status;
+	p *next;
+}*root;
+int  allocate_map()
+{
+	root=NULL;
+	y=MIN;
+}
+int allocate_pid()
+{
+	p *t2;
+	if(root==NULL)
+	{
+		p *t1=(p *)malloc(sizeof(p));
+		t1->status=1;
+		y++;
+		t1->pid=y;
+		t1->next=NULL;
+		
+		printf("pid %d is assigned\n",t1->pid);
+		
+		root=t1;
+		
+		return t1->pid; 
+	}
+	if(y>=1000)
+	{
+		printf("cannot assign\n");
+		return 0;
+	}
+	
+	else
+	{
+		
+		t2=root;
+		while(t2->next!=NULL)
+		{
+			if(t2->status==0)
+			{
+				break;
+			}
+			t2=t2->next;
+		}
+	}
+	//printf("%d\n",t2->status);
+	if(t2->status==0)
+	{
+		
+	
+	t2->status=1;
+	printf("pid %d is assigned\n",t2->pid);
+	
+	return t2->pid;
+	
+	}
+	if(t2->next==NULL)
+	{
+		p *t3=(p *)malloc(sizeof(p));
+		t2->next=t3;
+		t3->status=1;
+		y++;
+	
+		t3->pid=y;
+		t3->next=NULL;
+		//printf("I am here\n");
+		printf("pid %d is assigned\n",t3->pid);
+		
+		return t3->pid;
+		
+	}
+	
+
+	
+	
+	//t2->pid=y;
+	//y++;
+	
+}
+void release_pid(int x)
+{
+	p *t=(p *)malloc(sizeof(p));
+	t=root;
+	/*if(root->pid==x)
+	{
+		y=MIN;
+		//root->status=0;
+		root=NULL;
+	}*/
+	while(t->next!=NULL)
+	{
+		if(t->pid==x)
+		{
+			
+			break;
+		}
+	t=t->next;
+	}
+	t->status=0;
+	printf("pid %d is released\n",t->pid);
+}
+void sleep1()
+{
+	int s;
+	s=rand()%10;
+	printf("%d",s);
+	sleep(s);
+}
+void test()
+{
+	int j;
+	for(j=0;j<900;j++)
+	{
+		c[j]=allocate_pid();
+		//printf("%d\n",c[j]);
+		//sleep1();
+		
+		if(c[j]==0)
+		{
+			printf("pid is not assigned\n");
+		}
+		else
+		{
+		
+		release_pid(c[j]);
+		
+}
+	}
+}
+void count()
+{
+
+	
+	p *t;
+	int count=0;
+	t=root;
+	while(t!=NULL)
+	{
+		t=t->next;
+		count++;
+	}
+	printf("no of nodes created= %d \n",count);
+	
+	
+}
+
+main()
+{
+	allocate_map();
+	test();
+	//count();
+}
